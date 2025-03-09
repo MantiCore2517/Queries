@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+* {
+	margin: 0;
+	/* padding: 0; */
+}
+:root {
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	margin: 0 auto;
+	margin-top: 100px;
+}
+
+body {
+	margin: 0;
+
+	place-items: center;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		color: #9a9c9e;
+		background-color: #3a3939;
+	}
+	a:hover {
+		color: #747bff;
+	}
+}
