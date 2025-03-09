@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { RegForm } from "../RegForm/RegForm";
+import { ToDoList } from "../ToDoList/ToDoList";
 export const AppLayout = () => {
-	return <RegForm />;
+	return <ToDoList />;
 };
