@@ -23,17 +23,14 @@ const formSchema = yup.object().shape({
 const confirmMessage = {
 	message: "Задача была успешно создана",
 	type: "confirm",
-	time: Date.now(),
 };
 const deleteMessage = {
 	message: "Задача успешно удалена",
 	type: "delete",
-	time: Date.now(),
 };
 const updateMessage = {
 	message: "Задача успешно обновлена",
 	type: "update",
-	time: Date.now(),
 };
 
 export const ToDoList = () => {
