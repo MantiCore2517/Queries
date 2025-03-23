@@ -1,0 +1,46 @@
+{
+  "messages": [
+    {
+      "id": 1,
+      "message": "Задача успешно создана!",
+      "type": "confirm"
+    },
+    {
+      "id": 2,
+      "message": "Задача успешно удалена!",
+      "type": "delete"
+    },
+    {
+      "id": 3,
+      "message": "Задача успешно обновлена!",
+      "type": "update"
+    }
+  ],
+  "todos": [
+    {
+      "title": "arhgae",
+      "completed": false,
+      "id": 19
+    },
+    {
+      "title": "aerhgaeaerhae",
+      "completed": true,
+      "id": 37
+    },
+    {
+      "title": "aeheahaerh",
+      "completed": true,
+      "id": 42
+    },
+    {
+      "title": "saahtaerha athateh",
+      "completed": false,
+      "id": 43
+    },
+    {
+      "title": "rsethsrth",
+      "completed": false,
+      "id": 45
+    }
+  ]
+}

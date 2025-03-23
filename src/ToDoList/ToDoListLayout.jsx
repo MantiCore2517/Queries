@@ -2,9 +2,9 @@
 import IMAGES from "../img/Images";
 
 export const ToDoListLayout = (props) => {
-	const { todos, loading, onSubmit, search, onDelete, onUpdate } = props;
+	const { loading, onSubmit, search, onDelete, onUpdate } = props;
 	return (
-		<div>
+		<div className="grid place-items-center">
 			<h1 className="text-2xl font-bold place-self-center mb-1">To Do List</h1>
 			<div className="grid h-10 place-items-center ">
 				{props.message && props.message.type === "error" && (
@@ -20,7 +20,7 @@ export const ToDoListLayout = (props) => {
 					<span className="text-amber-300">{props.message.message}</span>
 				)}
 			</div>
-			<table className="table-auto w-[600px] grid">
+			<table className="table-fixed w-[600px] grid">
 				<thead className="mb-5">
 					<tr>
 						<th className="flex justify-center">
@@ -61,11 +61,16 @@ export const ToDoListLayout = (props) => {
 							</td>
 						</tr>
 					) : (
-						props.filteredTodos.map(([id, todo]) => (
-							<tr key={id} className="m-2">
+						props.filteredTodos.map((todo) => (
+							<tr key={todo.id} className="m-2">
 								<td className="h-[32px] w-[32px] flex justify-center">
 									<input
-										onChange={onUpdate.bind(this, id, todo.completed)}
+										onChange={onUpdate.bind(
+											this,
+											todo.id,
+											"completed",
+											!todo.completed,
+										)}
 										className="m-2"
 										type="checkbox"
 										checked={todo.completed}
@@ -82,7 +87,7 @@ export const ToDoListLayout = (props) => {
 								</td>
 								<td className="w-[64px] mx-2 flex justify-center">
 									<button
-										onClick={onDelete.bind(this, id)}
+										onClick={onDelete.bind(this, todo.id)}
 										className="border-1 border-solid border-transparent rounded-md px-1 py-1 cursor-pointer duration-500 ease-linear transition-shadow hover:shadow-sm hover:shadow-red-800/80"
 									>
 										<img

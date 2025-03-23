@@ -6,6 +6,7 @@ import {
 	useRequestDeleteTodos,
 	useRequestUpdateTodos,
 } from "../hooks";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -19,12 +20,29 @@ const formSchema = yup.object().shape({
 		.max(100, "Название задачи не может превышать 100 символов!"),
 });
 
+const confirmMessage = {
+	message: "Задача была успешно создана",
+	type: "confirm",
+	time: Date.now(),
+};
+const deleteMessage = {
+	message: "Задача успешно удалена",
+	type: "delete",
+	time: Date.now(),
+};
+const updateMessage = {
+	message: "Задача успешно обновлена",
+	type: "update",
+	time: Date.now(),
+};
+
 export const ToDoList = () => {
+	const [timeoutRef, setTimeoutRef] = useState(null);
 	const [message, setMessage] = useState(null);
 	const [inputValue, setInputValue] = useState("");
-	const { todos, loading } = useRequestGetTodos();
+	const { todos, loading, refresh, setRefresh } = useRequestGetTodos();
 	const [debouncedValue] = useDebounce(inputValue, 500);
-	const [filteredTodos, setFilteredTodos] = useState(Object.entries(todos));
+	const [filteredTodos, setFilteredTodos] = useState(todos);
 	const {
 		register,
 		handleSubmit,
@@ -39,63 +57,69 @@ export const ToDoList = () => {
 	const { deleteTodoById } = useRequestDeleteTodos();
 	const { updateTodo } = useRequestUpdateTodos();
 
-	const confirmMessage = "Задача успешно создана!";
-	const deleteMessage = "Задача успешно удалена!";
-	const updateMessage = "Задача успешно обновлена!";
-
 	useEffect(() => {
 		setFilteredTodos(
-			Object.entries(todos).filter(([id, todo]) => {
-				!debouncedValue && true;
-				message && message.type === "confirm" && true;
-				const search = debouncedValue.trim().toLowerCase();
-				const title = todo.title.toLowerCase();
-
-				return title.includes(search);
-			}),
+			!inputValue || inputValue === null
+				? todos
+				: todos.filter((todo) => {
+						const search = debouncedValue.trim().toLowerCase();
+						const title = todo.title.toLowerCase();
+						return title.includes(search);
+					}),
 		);
-	}, [debouncedValue, todos, message]);
+	}, [debouncedValue, todos, inputValue]);
 
-	const onChange = (event) => {
-		setInputValue(event.target.value);
-	};
+	const onChange = (event) => setInputValue(event.target.value || "");
 
 	const onSubmit = (data) => {
 		addTodo({
 			title: data.search,
 			completed: false,
 		});
-
 		reset();
-
-		messageHandler({ message: confirmMessage, type: "confirm" });
+		setInputValue("");
+		setRefresh(!refresh);
+		messageHandler(confirmMessage);
 	};
 
 	const handleDelete = (id) => {
 		deleteTodoById(id);
-		messageHandler({ message: deleteMessage, type: "delete" });
+		setRefresh(!refresh);
+		messageHandler(deleteMessage);
 	};
 
-	const handleUpdate = (id, prev) => {
-		updateTodo(id, { completed: !prev });
-		messageHandler({ message: updateMessage, type: "update" });
+	const handleUpdate = (id, field, value) => {
+		updateTodo(id, field, value);
+		setRefresh(!refresh);
+		messageHandler(updateMessage);
 	};
 
 	const messageHandler = (message) => {
+		clearTimeout(timeoutRef);
 		setMessage(message);
-		setTimeout(() => {
-			setMessage(null);
-		}, 1000);
+		setTimeoutRef(
+			setTimeout(() => {
+				setMessage(null);
+			}, 2000),
+		);
 	};
 
 	useEffect(() => {
 		if (errors.search?.message) {
-			messageHandler({ message: errors.search?.message, type: "error" });
+			messageHandler({
+				message: errors.search?.message,
+				type: "error",
+				time: Date.now(),
+			});
 		}
 	}, [errors.search?.message]);
 
 	const onClick = () => {
-		messageHandler({ message: errors.search?.message, type: "error" });
+		messageHandler({
+			message: errors.search?.message,
+			type: "error",
+			time: Date.now(),
+		});
 	};
 
 	const props = {
