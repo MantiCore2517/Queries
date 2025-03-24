@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDebounce } from "use-debounce";
 import { ToDo } from "../ToDo/ToDo";
+import * as sysMessages from "../constants";
 
 const formSchema = yup.object().shape({
 	search: yup
@@ -20,19 +21,6 @@ const formSchema = yup.object().shape({
 		.min(5, "Название задачи должно содержать минимум 5 символов!")
 		.max(100, "Название задачи не может превышать 100 символов!"),
 });
-
-const confirmMessage = {
-	message: "Задача была успешно создана",
-	type: "confirm",
-};
-const deleteMessage = {
-	message: "Задача успешно удалена",
-	type: "delete",
-};
-const updateMessage = {
-	message: "Задача успешно обновлена",
-	type: "update",
-};
 
 export const ToDoList = () => {
 	const [timeoutRef, setTimeoutRef] = useState(null);
@@ -77,19 +65,19 @@ export const ToDoList = () => {
 		reset();
 		setInputValue("");
 		setRefresh(!refresh);
-		messageHandler(confirmMessage);
+		messageHandler(sysMessages.confirmMessage);
 	};
 
 	const handleDelete = (id) => {
 		deleteTodoById(id);
 		setRefresh(!refresh);
-		messageHandler(deleteMessage);
+		messageHandler(sysMessages.deleteMessage);
 	};
 
 	const handleUpdate = (id, field, value) => {
 		updateTodo(id, field, value);
 		setRefresh(!refresh);
-		messageHandler(updateMessage);
+		messageHandler(sysMessages.updateMessage);
 	};
 
 	const messageHandler = (message) => {

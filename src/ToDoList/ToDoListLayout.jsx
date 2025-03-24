@@ -66,15 +66,16 @@ export const ToDoListLayout = (props) => {
 							<tr key={todo.id} className="m-2">
 								<td className="h-[32px] w-[32px] flex justify-center">
 									<input
-										onChange={onUpdate.bind(
-											this,
-											todo.id,
-											"completed",
-											!todo.completed,
-										)}
+										// onChange={onUpdate.bind(
+										// 	this,
+										// 	todo.id,
+										// 	"completed",
+										// 	!todo.completed,
+										// )}
 										className="m-2"
 										type="checkbox"
 										checked={todo.completed}
+										readOnly
 									/>
 								</td>
 								<td className="w-[450px]">
@@ -94,7 +95,7 @@ export const ToDoListLayout = (props) => {
 									</div>
 								</td>
 								<td className="w-[64px] mx-2 flex justify-center">
-									<button
+									{/* <button
 										onClick={onDelete.bind(this, todo.id)}
 										className="border-1 border-solid border-transparent rounded-md px-1 py-1 cursor-pointer duration-500 ease-linear transition-shadow hover:shadow-sm hover:shadow-red-800/80"
 									>
@@ -103,7 +104,7 @@ export const ToDoListLayout = (props) => {
 											alt="del"
 											className="w-4 h-4"
 										/>
-									</button>
+									</button> */}
 								</td>
 							</tr>
 						))
