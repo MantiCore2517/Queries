@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDebounce } from "use-debounce";
+import { ToDo } from "../ToDo/ToDo";
 
 const formSchema = yup.object().shape({
 	search: yup
@@ -121,6 +122,7 @@ export const ToDoList = () => {
 
 	const props = {
 		todos: todos,
+		todo: <ToDo />,
 		filteredTodos: filteredTodos,
 		loading: loading,
 		onSubmit: handleSubmit(onSubmit),

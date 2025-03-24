@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import IMAGES from "../img/Images";
+import { Link } from "react-router-dom";
 
 export const ToDoListLayout = (props) => {
 	const { loading, onSubmit, search, onDelete, onUpdate } = props;
@@ -79,10 +80,17 @@ export const ToDoListLayout = (props) => {
 								<td className="w-[450px]">
 									<div
 										className={
-											todo.completed ? "pl-2 line-through" : "pl-2"
+											todo.completed
+												? "pl-2 line-through w-[450px] block whitespace-nowrap overflow-hidden overflow-ellipsis"
+												: "pl-2 w-[450px] block whitespace-nowrap overflow-hidden overflow-ellipsis"
 										}
 									>
-										{todo.title}
+										<Link
+											to={`task/${todo.id}`}
+											className="text-blue-400"
+										>
+											{todo.title}
+										</Link>
 									</div>
 								</td>
 								<td className="w-[64px] mx-2 flex justify-center">
