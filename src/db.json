@@ -18,34 +18,19 @@
   ],
   "todos": [
     {
-      "title": "jsNDVJs sgtbkjns' sstnksl'kb sat kn'lsknt strkjn'lk'lks strkn'lkn'lkstrhgsrte  kn'lsrknthstre",
-      "completed": false,
-      "id": 46
-    },
-    {
-      "title": "hterth ert etrg",
+      "title": "Поскорее закончить задание из блока \"Маршрутизация\"",
       "completed": true,
-      "id": 47
+      "id": 61
     },
     {
-      "title": "wefwef wefw",
+      "title": "Поскорее закончить задание из блока \"Context API\"",
       "completed": false,
-      "id": 52
+      "id": 62
     },
     {
-      "title": "gdfiy oyopy yup;i",
+      "title": "Наконец то приступить к изучению Redux",
       "completed": false,
-      "id": 53
-    },
-    {
-      "title": "Вполне возможно, что все работает корректно и можно с этим заканчивать",
-      "completed": false,
-      "id": 54
-    },
-    {
-      "title": "прпдрпнн",
-      "completed": true,
-      "id": 55
+      "id": 63
     }
   ]
 }

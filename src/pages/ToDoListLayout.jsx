@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import IMAGES from "../img/Images";
+
 import { Link } from "react-router-dom";
 
 export const ToDoListLayout = (props) => {
-	const { loading, onSubmit, search, onDelete, onUpdate } = props;
+	const { loading, onSubmit, search } = props;
 	return (
 		<div className="grid place-items-center">
-			<h1 className="text-2xl font-bold place-self-center mb-1">To Do List</h1>
+			<h1 className="text-xl font-semibold place-self-center mb-1">To Do List</h1>
 			<div className="grid h-10 place-items-center ">
 				{props.message && props.message.type === "error" && (
 					<div className=" text-red-400  ">{props.message.message}</div>
@@ -38,7 +38,7 @@ export const ToDoListLayout = (props) => {
 									type="text"
 									name="search"
 									{...search}
-									className="w-[450px] border-1 border-solid border-transparent rounded-md px-2 py-1 bg-darker-bg duration-500 ease-linear transition-colors hover:border-gray-300/70 focus:border-gray-300/70 justify-self-start"
+									className="w-[450px] border-1 border-solid placeholder-stone-500 border-transparent rounded-md px-2 py-1 bg-darker-bg duration-500 ease-linear transition-colors hover:border-gray-300/70 focus:border-gray-300/70 justify-self-start"
 									placeholder="Search..."
 								></input>
 								<button
@@ -66,12 +66,6 @@ export const ToDoListLayout = (props) => {
 							<tr key={todo.id} className="m-2">
 								<td className="h-[32px] w-[32px] flex justify-center">
 									<input
-										// onChange={onUpdate.bind(
-										// 	this,
-										// 	todo.id,
-										// 	"completed",
-										// 	!todo.completed,
-										// )}
 										className="m-2"
 										type="checkbox"
 										checked={todo.completed}
@@ -88,24 +82,13 @@ export const ToDoListLayout = (props) => {
 									>
 										<Link
 											to={`task/${todo.id}`}
-											className="text-blue-400"
+											className="hover:text-blue-400"
 										>
 											{todo.title}
 										</Link>
 									</div>
 								</td>
-								<td className="w-[64px] mx-2 flex justify-center">
-									{/* <button
-										onClick={onDelete.bind(this, todo.id)}
-										className="border-1 border-solid border-transparent rounded-md px-1 py-1 cursor-pointer duration-500 ease-linear transition-shadow hover:shadow-sm hover:shadow-red-800/80"
-									>
-										<img
-											src={IMAGES.delIcon}
-											alt="del"
-											className="w-4 h-4"
-										/>
-									</button> */}
-								</td>
+								<td className="w-[64px] mx-2 flex justify-center"></td>
 							</tr>
 						))
 					)}

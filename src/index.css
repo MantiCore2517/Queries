@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
+
 * {
 	/* margin: 0; */
 	/* padding: 0; */
@@ -15,7 +16,7 @@
 	-moz-osx-font-smoothing: grayscale;
 
 	margin: 0 auto;
-	margin-top: 100px;
+	/* margin-top: 100px; */
 	scrollbar-gutter: stable;
 }
 
@@ -25,12 +26,26 @@ body {
 	place-items: center;
 }
 
-@media (prefers-color-scheme: light) {
-	:root {
+@media (prefers-color-scheme: dark) {
+	.dark-theme {
 		color: #9a9c9e;
 		background-color: #3a3939;
+	}
+	.light-theme {
+		color: #3a3939;
+		background-color: #9a9c9e;
 	}
 	a:hover {
 		color: #747bff;
 	}
+}
+
+.dark-theme {
+	background-color: #3a3939;
+	color: #9a9c9e;
+}
+
+.light-theme {
+	background-color: #9a9c9e;
+	color: #3a3939;
 }

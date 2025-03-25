@@ -1,18 +1,12 @@
 import { useState, useEffect } from "react";
-import { ToDoListLayout } from "./ToDoListLayout";
-import {
-	useRequestGetTodos,
-	useRequestAddTodos,
-	useRequestDeleteTodos,
-	useRequestUpdateTodos,
-} from "../hooks";
-
+import { ToDoListLayout } from "../../pages/ToDoListLayout";
+import { useTodo } from "../../hooks";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDebounce } from "use-debounce";
 import { ToDo } from "../ToDo/ToDo";
-import * as sysMessages from "../constants";
+import * as sysMessages from "../../constants";
 
 const formSchema = yup.object().shape({
 	search: yup
@@ -22,13 +16,12 @@ const formSchema = yup.object().shape({
 		.max(100, "Название задачи не может превышать 100 символов!"),
 });
 
-export const ToDoList = () => {
+export const ToDoList = (messageProps) => {
 	const [timeoutRef, setTimeoutRef] = useState(null);
-	const [message, setMessage] = useState(null);
+	//const [message, setMessage] = useState(null);
 	const [inputValue, setInputValue] = useState("");
-	const { todos, loading, refresh, setRefresh } = useRequestGetTodos();
 	const [debouncedValue] = useDebounce(inputValue, 500);
-	const [filteredTodos, setFilteredTodos] = useState(todos);
+	const [filteredTodos, setFilteredTodos] = useState([]);
 	const {
 		register,
 		handleSubmit,
@@ -39,53 +32,48 @@ export const ToDoList = () => {
 		resolver: yupResolver(formSchema),
 		mode: "onSubmit",
 	});
-	const { addTodo } = useRequestAddTodos();
-	const { deleteTodoById } = useRequestDeleteTodos();
-	const { updateTodo } = useRequestUpdateTodos();
+
+	const { todosList, isLoading, error, getTodosList, addTodoItem } = useTodo();
+
+	useEffect(() => {
+		getTodosList();
+	}, []);
 
 	useEffect(() => {
 		setFilteredTodos(
-			!inputValue || inputValue === null
-				? todos
-				: todos.filter((todo) => {
-						const search = debouncedValue.trim().toLowerCase();
-						const title = todo.title.toLowerCase();
-						return title.includes(search);
-					}),
+			todosList.filter((todo) => {
+				const search = debouncedValue.trim().toLowerCase();
+				const title = todo.title.toLowerCase();
+				return title.includes(search);
+			}),
 		);
-	}, [debouncedValue, todos, inputValue]);
+	}, [debouncedValue, todosList]);
 
 	const onChange = (event) => setInputValue(event.target.value || "");
 
 	const onSubmit = (data) => {
-		addTodo({
+		addTodoItem({
 			title: data.search,
 			completed: false,
 		});
 		reset();
+		getTodosList();
 		setInputValue("");
-		setRefresh(!refresh);
-		messageHandler(sysMessages.confirmMessage);
-	};
-
-	const handleDelete = (id) => {
-		deleteTodoById(id);
-		setRefresh(!refresh);
-		messageHandler(sysMessages.deleteMessage);
-	};
-
-	const handleUpdate = (id, field, value) => {
-		updateTodo(id, field, value);
-		setRefresh(!refresh);
-		messageHandler(sysMessages.updateMessage);
+		error
+			? messageHandler({
+					message: error.message,
+					type: "error",
+					time: Date.now(),
+				})
+			: messageHandler(sysMessages.confirmMessage);
 	};
 
 	const messageHandler = (message) => {
 		clearTimeout(timeoutRef);
-		setMessage(message);
+		messageProps.setMessage(message);
 		setTimeoutRef(
 			setTimeout(() => {
-				setMessage(null);
+				messageProps.setMessage(null);
 			}, 2000),
 		);
 	};
@@ -109,17 +97,15 @@ export const ToDoList = () => {
 	};
 
 	const props = {
-		todos: todos,
+		todos: todosList,
 		todo: <ToDo />,
 		filteredTodos: filteredTodos,
-		loading: loading,
+		loading: isLoading,
 		onSubmit: handleSubmit(onSubmit),
 		search: { ...register("search") },
-		onDelete: handleDelete,
-		onUpdate: handleUpdate,
 		onClick: onClick,
 		onChange: onChange,
-		message: message,
+		message: messageProps.message,
 	};
 
 	return <ToDoListLayout {...props} />;

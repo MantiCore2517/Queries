@@ -1,13 +1,20 @@
 /* eslint-disable react/prop-types */
 import IMAGES from "../img/Images";
 import { Link } from "react-router-dom";
+import { Modal } from "../components/Modal/Modal";
 
 export const ToDoLayout = (props) => {
 	const { onDelete, onUpdate } = props;
 	return (
-		<div className="block w-[512px]">
+		<div className="block w-[600px]">
+			<Modal
+				isOpen={props.isOpen}
+				onClose={props.setIsOpen}
+				onDelete={onDelete}
+				idToDel={props.todo.id}
+			/>
 			<div className="grid">
-				<h1 className="text-2xl font-bold place-self-center mb-1">
+				<h1 className="text-xl font-semibold place-self-center mb-1">
 					To Do, id-{`${props.todo.id}`}
 				</h1>
 				<div className="grid h-10 place-items-center ">
@@ -26,18 +33,13 @@ export const ToDoLayout = (props) => {
 				</div>
 				<div className="w-full flex h-10">
 					<input
-						onChange={onUpdate.bind(
-							this,
-							props.todo.id,
-							"completed",
-							!props.todo.completed,
-						)}
+						onChange={onUpdate.bind(this, "completed", !props.todo.completed)}
 						className="w-4 h-4 place-self-center"
 						type="checkbox"
 						checked={props.todo.completed || false}
 					/>
 					<button
-						onClick={onDelete.bind(this, props.todo.id)}
+						onClick={props.setIsOpen.bind(this, true)}
 						className="ml-3 w-6 h-6 place-self-center border-1 border-solid border-transparent rounded-md  cursor-pointer duration-500 ease-linear transition-shadow hover:shadow-sm hover:shadow-red-800/80"
 					>
 						<img
@@ -46,7 +48,7 @@ export const ToDoLayout = (props) => {
 							className="w-4 h-4 place-self-center"
 						/>
 					</button>
-					<Link to="/" className="ml-auto ">
+					<Link to="/" className="mr-[50px] ml-auto ">
 						<button
 							className="border-1 h-[32px] w-[64px] justify-content-center border-solid border-transparent rounded-md px-2 py-1 bg-gray-300/90 text-dark-bg font-bold  cursor-pointer shadow-sm shadow-darker-bg duration-500 ease-linear transition-colors hover:border-gray-500 hover:text-darker-bg"
 							type="submit"
