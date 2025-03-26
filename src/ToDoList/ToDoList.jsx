@@ -11,6 +11,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDebounce } from "use-debounce";
+import { useContext } from "react";
+import { AppContext } from "../AppContext";
 
 const formSchema = yup.object().shape({
 	search: yup
@@ -20,22 +22,8 @@ const formSchema = yup.object().shape({
 		.max(100, "Название задачи не может превышать 100 символов!"),
 });
 
-const confirmMessage = {
-	message: "Задача была успешно создана",
-	type: "confirm",
-};
-const deleteMessage = {
-	message: "Задача успешно удалена",
-	type: "delete",
-};
-const updateMessage = {
-	message: "Задача успешно обновлена",
-	type: "update",
-};
-
 export const ToDoList = () => {
-	const [timeoutRef, setTimeoutRef] = useState(null);
-	const [message, setMessage] = useState(null);
+	const { messageHandler, messages } = useContext(AppContext);
 	const [inputValue, setInputValue] = useState("");
 	const { todos, loading, refresh, setRefresh } = useRequestGetTodos();
 	const [debouncedValue] = useDebounce(inputValue, 500);
@@ -76,29 +64,19 @@ export const ToDoList = () => {
 		reset();
 		setInputValue("");
 		setRefresh(!refresh);
-		messageHandler(confirmMessage);
+		messageHandler(messages.confirm);
 	};
 
 	const handleDelete = (id) => {
 		deleteTodoById(id);
 		setRefresh(!refresh);
-		messageHandler(deleteMessage);
+		messageHandler(messages.delete);
 	};
 
 	const handleUpdate = (id, field, value) => {
 		updateTodo(id, field, value);
 		setRefresh(!refresh);
-		messageHandler(updateMessage);
-	};
-
-	const messageHandler = (message) => {
-		clearTimeout(timeoutRef);
-		setMessage(message);
-		setTimeoutRef(
-			setTimeout(() => {
-				setMessage(null);
-			}, 2000),
-		);
+		messageHandler(messages.update);
 	};
 
 	useEffect(() => {
@@ -129,7 +107,6 @@ export const ToDoList = () => {
 		onUpdate: handleUpdate,
 		onClick: onClick,
 		onChange: onChange,
-		message: message,
 	};
 
 	return <ToDoListLayout {...props} />;

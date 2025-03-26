@@ -1,23 +1,38 @@
 /* eslint-disable react/prop-types */
 import IMAGES from "../img/Images";
+import { useContext } from "react";
+import { AppContext } from "../AppContext";
 
 export const ToDoListLayout = (props) => {
-	const { loading, onSubmit, search, onDelete, onUpdate } = props;
+	const {
+		loading,
+		onSubmit,
+		search,
+		onDelete,
+		onUpdate,
+		filteredTodos,
+
+		onClick,
+		onChange,
+	} = props;
+
+	const { message } = useContext(AppContext);
+
 	return (
 		<div className="grid place-items-center">
 			<h1 className="text-2xl font-bold place-self-center mb-1">To Do List</h1>
 			<div className="grid h-10 place-items-center ">
-				{props.message && props.message.type === "error" && (
-					<div className=" text-red-400  ">{props.message.message}</div>
+				{message && message.type === "error" && (
+					<div className=" text-red-400  ">{message.message}</div>
 				)}
-				{props.message && props.message.type === "confirm" && (
-					<span className="text-green-400">{props.message.message}</span>
+				{message && message.type === "confirm" && (
+					<span className="text-green-400">{message.message}</span>
 				)}
-				{props.message && props.message.type === "delete" && (
-					<span className="text-amber-600">{props.message.message}</span>
+				{message && message.type === "delete" && (
+					<span className="text-amber-600">{message.message}</span>
 				)}
-				{props.message && props.message.type === "update" && (
-					<span className="text-amber-300">{props.message.message}</span>
+				{message && message.type === "update" && (
+					<span className="text-amber-300">{message.message}</span>
 				)}
 			</div>
 			<table className="table-fixed w-[600px] grid">
@@ -32,7 +47,7 @@ export const ToDoListLayout = (props) => {
 							/>
 						</th>
 						<th>
-							<form onSubmit={onSubmit} onChange={props.onChange}>
+							<form onSubmit={onSubmit} onChange={onChange}>
 								<input
 									type="text"
 									name="search"
@@ -41,7 +56,7 @@ export const ToDoListLayout = (props) => {
 									placeholder="Search..."
 								></input>
 								<button
-									onClick={props.onClick}
+									onClick={onClick}
 									className="mx-2 border-1 w-[64px] border-solid border-transparent rounded-md px-2 py-1 bg-gray-300/90 text-dark-bg font-bold  cursor-pointer shadow-sm shadow-darker-bg duration-500 ease-linear transition-colors hover:border-gray-500 hover:text-darker-bg"
 									type="submit"
 								>
@@ -61,7 +76,7 @@ export const ToDoListLayout = (props) => {
 							</td>
 						</tr>
 					) : (
-						props.filteredTodos.map((todo) => (
+						filteredTodos.map((todo) => (
 							<tr key={todo.id} className="m-2">
 								<td className="h-[32px] w-[32px] flex justify-center">
 									<input
