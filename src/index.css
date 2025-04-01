@@ -25,7 +25,7 @@ body {
 	place-items: center;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
 	:root {
 		color: #9a9c9e;
 		background-color: #3a3939;

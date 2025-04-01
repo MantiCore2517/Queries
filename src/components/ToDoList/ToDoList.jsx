@@ -1,18 +1,12 @@
 import { useState, useEffect } from "react";
 import { ToDoListLayout } from "./ToDoListLayout";
-import {
-	useRequestGetTodos,
-	useRequestAddTodos,
-	useRequestDeleteTodos,
-	useRequestUpdateTodos,
-} from "../hooks";
-
+import { useTodo } from "../../hooks";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDebounce } from "use-debounce";
 import { useContext } from "react";
-import { AppContext } from "../AppContext";
+import { AppContext } from "../../AppContext";
 
 const formSchema = yup.object().shape({
 	search: yup
@@ -23,11 +17,19 @@ const formSchema = yup.object().shape({
 });
 
 export const ToDoList = () => {
-	const { messageHandler, messages } = useContext(AppContext);
+	const { setStatus } = useContext(AppContext);
 	const [inputValue, setInputValue] = useState("");
-	const { todos, loading, refresh, setRefresh } = useRequestGetTodos();
 	const [debouncedValue] = useDebounce(inputValue, 500);
-	const [filteredTodos, setFilteredTodos] = useState(todos);
+	const {
+		todosList,
+		isLoading,
+		updateTodoItem,
+		deleteTodoItem,
+		getTodosList,
+		addTodoItem,
+		error,
+	} = useTodo();
+	const [filteredTodos, setFilteredTodos] = useState(todosList);
 	const {
 		register,
 		handleSubmit,
@@ -38,69 +40,59 @@ export const ToDoList = () => {
 		resolver: yupResolver(formSchema),
 		mode: "onSubmit",
 	});
-	const { addTodo } = useRequestAddTodos();
-	const { deleteTodoById } = useRequestDeleteTodos();
-	const { updateTodo } = useRequestUpdateTodos();
+
+	useEffect(() => {
+		getTodosList();
+	}, []);
 
 	useEffect(() => {
 		setFilteredTodos(
-			!inputValue || inputValue === null
-				? todos
-				: todos.filter((todo) => {
-						const search = debouncedValue.trim().toLowerCase();
-						const title = todo.title.toLowerCase();
-						return title.includes(search);
-					}),
+			todosList.filter((todo) => {
+				const search = debouncedValue.trim().toLowerCase();
+				const title = todo.title.toLowerCase();
+				return title.includes(search);
+			}),
 		);
-	}, [debouncedValue, todos, inputValue]);
+	}, [debouncedValue, todosList]);
 
 	const onChange = (event) => setInputValue(event.target.value || "");
 
 	const onSubmit = (data) => {
-		addTodo({
+		addTodoItem({
 			title: data.search,
 			completed: false,
 		});
 		reset();
 		setInputValue("");
-		setRefresh(!refresh);
-		messageHandler(messages.confirm);
+		error ? setStatus(errors.search?.message) : setStatus("confirm");
 	};
 
-	const handleDelete = (id) => {
-		deleteTodoById(id);
-		setRefresh(!refresh);
-		messageHandler(messages.delete);
+	const handleDelete = (todo) => {
+		deleteTodoItem(todo);
+		setStatus("delete");
 	};
 
-	const handleUpdate = (id, field, value) => {
-		updateTodo(id, field, value);
-		setRefresh(!refresh);
-		messageHandler(messages.update);
+	const handleUpdate = (todo, field, value) => {
+		const currentTodo = todo;
+		const updatedTodo = { ...currentTodo, [field]: value };
+		updateTodoItem(updatedTodo);
+		setStatus("update");
 	};
 
 	useEffect(() => {
 		if (errors.search?.message) {
-			messageHandler({
-				message: errors.search?.message,
-				type: "error",
-				time: Date.now(),
-			});
+			setStatus(errors.search?.message);
 		}
 	}, [errors.search?.message]);
 
 	const onClick = () => {
-		messageHandler({
-			message: errors.search?.message,
-			type: "error",
-			time: Date.now(),
-		});
+		setStatus(errors.search?.message);
 	};
 
 	const props = {
-		todos: todos,
+		todos: todosList,
 		filteredTodos: filteredTodos,
-		loading: loading,
+		loading: isLoading,
 		onSubmit: handleSubmit(onSubmit),
 		search: { ...register("search") },
 		onDelete: handleDelete,

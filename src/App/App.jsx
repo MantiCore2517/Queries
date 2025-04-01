@@ -1,41 +1,30 @@
 import { AppLayout } from "./AppLayout";
-import { useState } from "react";
-
-const confirmMessage = {
-	message: "Задача была успешно создана",
-	type: "confirm",
-};
-const deleteMessage = {
-	message: "Задача успешно удалена",
-	type: "delete",
-};
-const updateMessage = {
-	message: "Задача успешно обновлена",
-	type: "update",
-};
+import { useState, useEffect } from "react";
+import config from "../config.json";
+import { useMessage } from "../hooks";
 
 export const App = () => {
 	const [message, setMessage] = useState(null);
-	const [timeoutRef, setTimeoutRef] = useState(null);
+	const [status, setStatus] = useState(null);
+	const { messagesList } = useMessage();
+	const title = config.APP_TITLE;
 
-	const messageHandler = (message) => {
-		clearTimeout(timeoutRef);
-		setMessage(message);
-		setTimeoutRef(
-			setTimeout(() => {
-				setMessage(null);
-			}, 2000),
-		);
-	};
+	const messages = {};
+	messagesList.forEach((message) => {
+		messages[message.type] = message.message;
+	});
+
+	useEffect(() => {
+		setStatus(null);
+	}, [status]);
 
 	const props = {
 		message: message,
-		messages: {
-			confirm: confirmMessage,
-			delete: deleteMessage,
-			update: updateMessage,
-		},
-		messageHandler: messageHandler,
+		status: status,
+		messagesList: messages,
+		setMessage: setMessage,
+		title: title,
+		setStatus: setStatus,
 	};
 
 	return <AppLayout {...props} />;

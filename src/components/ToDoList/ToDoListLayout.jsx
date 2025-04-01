@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
-import IMAGES from "../img/Images";
-import { useContext } from "react";
-import { AppContext } from "../AppContext";
+import IMAGES from "../../img/Images";
 
 export const ToDoListLayout = (props) => {
 	const {
@@ -16,43 +14,18 @@ export const ToDoListLayout = (props) => {
 		onChange,
 	} = props;
 
-	const { message } = useContext(AppContext);
-
 	return (
 		<div className="grid place-items-center">
-			<h1 className="text-2xl font-bold place-self-center mb-1">To Do List</h1>
-			<div className="grid h-10 place-items-center ">
-				{message && message.type === "error" && (
-					<div className=" text-red-400  ">{message.message}</div>
-				)}
-				{message && message.type === "confirm" && (
-					<span className="text-green-400">{message.message}</span>
-				)}
-				{message && message.type === "delete" && (
-					<span className="text-amber-600">{message.message}</span>
-				)}
-				{message && message.type === "update" && (
-					<span className="text-amber-300">{message.message}</span>
-				)}
-			</div>
 			<table className="table-fixed w-[600px] grid">
 				<thead className="mb-5">
 					<tr>
-						<th className="flex justify-center">
-							<input
-								className="w-4 h-4 m-2"
-								type="checkbox"
-								checked={false}
-								readOnly
-							/>
-						</th>
 						<th>
 							<form onSubmit={onSubmit} onChange={onChange}>
 								<input
 									type="text"
 									name="search"
 									{...search}
-									className="w-[450px] border-1 border-solid border-transparent rounded-md px-2 py-1 bg-darker-bg duration-500 ease-linear transition-colors hover:border-gray-300/70 focus:border-gray-300/70 justify-self-start"
+									className="w-[470px] border-1 border-solid border-transparent rounded-md px-2 py-1 bg-darker-bg duration-500 ease-linear transition-colors hover:border-gray-300/70 focus:border-gray-300/70 justify-self-start"
 									placeholder="Search..."
 								></input>
 								<button
@@ -82,7 +55,7 @@ export const ToDoListLayout = (props) => {
 									<input
 										onChange={onUpdate.bind(
 											this,
-											todo.id,
+											todo,
 											"completed",
 											!todo.completed,
 										)}
@@ -102,7 +75,7 @@ export const ToDoListLayout = (props) => {
 								</td>
 								<td className="w-[64px] mx-2 flex justify-center">
 									<button
-										onClick={onDelete.bind(this, todo.id)}
+										onClick={onDelete.bind(this, todo)}
 										className="border-1 border-solid border-transparent rounded-md px-1 py-1 cursor-pointer duration-500 ease-linear transition-shadow hover:shadow-sm hover:shadow-red-800/80"
 									>
 										<img
