@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { todosAPI } from "../API/todosAPI";
 
 export const useTodo = () => {
@@ -6,8 +6,6 @@ export const useTodo = () => {
 	const [todo, setTodo] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
-
-	useEffect(() => {}, []);
 
 	const getTodosList = async () => {
 		setIsLoading(true);

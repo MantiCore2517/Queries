@@ -2,45 +2,12 @@
 import IMAGES from "../../img/Images";
 
 export const ToDoListLayout = (props) => {
-	const {
-		loading,
-		onSubmit,
-		search,
-		onDelete,
-		onUpdate,
-		filteredTodos,
-
-		onClick,
-		onChange,
-	} = props;
+	const { loading, onDelete, onUpdate, filteredTodos } = props;
 
 	return (
 		<div className="grid place-items-center">
 			<table className="table-fixed w-[600px] grid">
-				<thead className="mb-5">
-					<tr>
-						<th>
-							<form onSubmit={onSubmit} onChange={onChange}>
-								<input
-									type="text"
-									name="search"
-									{...search}
-									className="w-[470px] border-1 border-solid border-transparent rounded-md px-2 py-1 bg-darker-bg duration-500 ease-linear transition-colors hover:border-gray-300/70 focus:border-gray-300/70 justify-self-start"
-									placeholder="Search..."
-								></input>
-								<button
-									onClick={onClick}
-									className="mx-2 border-1 w-[64px] border-solid border-transparent rounded-md px-2 py-1 bg-gray-300/90 text-dark-bg font-bold  cursor-pointer shadow-sm shadow-darker-bg duration-500 ease-linear transition-colors hover:border-gray-500 hover:text-darker-bg"
-									type="submit"
-								>
-									Add
-								</button>
-							</form>
-						</th>
-					</tr>
-				</thead>
-
-				<tbody>
+				<tbody className="mt-4">
 					{loading ? (
 						<tr>
 							<td className="h-[32px] w-[32px] flex justify-center"></td>
