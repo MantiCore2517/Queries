@@ -3,12 +3,13 @@ import { ControlPanelLayout } from "./ControlPanelLayout";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { formSchema } from "../../utils/validation";
-import { useContext } from "react";
-import { AppContext } from "../../AppContext";
 import { useTodo } from "../../hooks";
+import { useDispatch } from "react-redux";
+import { appStatusConfirm, appStatusCustom } from "../../actions/app/actions";
+import { searchInputValue } from "../../Actions/search/actions";
 
 export const ControlPanel = () => {
-	const { setStatus, setInputValue } = useContext(AppContext);
+	const dispatch = useDispatch();
 
 	const {
 		register,
@@ -22,7 +23,7 @@ export const ControlPanel = () => {
 	});
 	const { addTodoItem, error } = useTodo();
 
-	const onChange = (event) => setInputValue(event.target.value || "");
+	const onChange = (event) => dispatch(searchInputValue(event));
 
 	const onSubmit = (data) => {
 		addTodoItem({
@@ -30,12 +31,14 @@ export const ControlPanel = () => {
 			completed: false,
 		});
 		reset();
-		setInputValue("");
-		error ? setStatus(errors.search?.message) : setStatus("confirm");
+		dispatch(searchInputValue());
+		error
+			? dispatch(appStatusCustom(errors.search?.message))
+			: dispatch(appStatusConfirm);
 	};
 
 	const onClick = () => {
-		setStatus(errors.search?.message);
+		dispatch(appStatusCustom(errors.search?.message));
 	};
 
 	const props = {

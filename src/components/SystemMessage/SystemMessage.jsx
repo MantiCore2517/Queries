@@ -2,10 +2,14 @@ import { SystemMessageLayout } from "./SystemMessageLayout";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AppContext } from "../../AppContext";
+import { useSelector } from "react-redux";
+import { appStatusSelector } from "../../selectors/app";
+import { useDispatch } from "react-redux";
 
 export const SystemMessage = () => {
 	const [timeoutRef, setTimeoutRef] = useState(null);
-	const { messagesList, setMessage, message, status } = useContext(AppContext);
+	const { messagesList, setMessage, message } = useContext(AppContext);
+	const status = useSelector(appStatusSelector);
 
 	const messageHandler = () => {
 		if (status) {

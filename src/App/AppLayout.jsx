@@ -7,11 +7,13 @@ import { ControlPanel } from "../components/ControlPanel/ControlPanel";
 
 export const AppLayout = (props) => {
 	return (
-		<AppContext value={props}>
-			<Title />
-			<SystemMessage />
-			<ControlPanel />
-			<ToDoList />
-		</AppContext>
+		<>
+			<AppContext value={props}>
+				<Title />
+				<SystemMessage />
+				<ControlPanel />
+				<ToDoList />
+			</AppContext>
+		</>
 	);
 };

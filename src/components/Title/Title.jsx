@@ -1,10 +1,19 @@
 /* eslint-disable react/prop-types */
 import { TitleLayout } from "./TitleLayout";
-import { useContext } from "react";
-import { AppContext } from "../../AppContext";
+import { appTitleSelector } from "../../selectors/app";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { appTitle } from "../../actions/app/actions";
+import { useEffect } from "react";
 
 export const Title = () => {
-	const { title } = useContext(AppContext);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(appTitle);
+	}, [dispatch]);
+
+	const title = useSelector(appTitleSelector);
 
 	return <TitleLayout title={title} />;
 };

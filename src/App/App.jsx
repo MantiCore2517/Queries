@@ -1,6 +1,5 @@
 import { AppLayout } from "./AppLayout";
 import { useState, useEffect } from "react";
-import config from "../config.json";
 import { useMessage } from "../hooks";
 import { useDebounce } from "use-debounce";
 
@@ -10,7 +9,6 @@ export const App = () => {
 	const [inputValue, setInputValue] = useState("");
 	const [debouncedValue] = useDebounce(inputValue, 500);
 	const { messagesList } = useMessage();
-	const title = config.APP_TITLE;
 
 	const messages = {};
 	messagesList.forEach((message) => {
@@ -26,7 +24,6 @@ export const App = () => {
 		status: status,
 		messagesList: messages,
 		setMessage: setMessage,
-		title: title,
 		setStatus: setStatus,
 		setInputValue: setInputValue,
 		debouncedValue: debouncedValue,

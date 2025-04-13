@@ -1,14 +1,21 @@
 import { useState, useEffect } from "react";
 import { ToDoListLayout } from "./ToDoListLayout";
 import { useTodo } from "../../hooks";
-import { useContext } from "react";
-import { AppContext } from "../../AppContext";
+import { appStatusSelector } from "../../selectors/app";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { appStatusDelete, appStatusUpdate } from "../../actions/app/actions";
+import { useDebounce } from "use-debounce";
+import { searchInputValue } from "../../selectors/search/search-input-value";
 
 export const ToDoList = () => {
-	const { status, setStatus, debouncedValue } = useContext(AppContext);
 	const { todosList, isLoading, updateTodoItem, deleteTodoItem, getTodosList } =
 		useTodo();
 	const [filteredTodos, setFilteredTodos] = useState(todosList);
+	const dispatch = useDispatch();
+	const status = useSelector(appStatusSelector);
+	const inputValue = useSelector(searchInputValue);
+	const [debouncedValue] = useDebounce(inputValue, 500);
 
 	useEffect(() => {
 		getTodosList();
@@ -26,14 +33,14 @@ export const ToDoList = () => {
 
 	const handleDelete = (todo) => {
 		deleteTodoItem(todo);
-		setStatus("delete");
+		dispatch(appStatusDelete);
 	};
 
 	const handleUpdate = (todo, field, value) => {
 		const currentTodo = todo;
 		const updatedTodo = { ...currentTodo, [field]: value };
 		updateTodoItem(updatedTodo);
-		setStatus("update");
+		dispatch(appStatusUpdate);
 	};
 
 	const props = {
