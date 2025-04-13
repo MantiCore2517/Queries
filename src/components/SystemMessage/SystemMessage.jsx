@@ -1,55 +1,59 @@
 import { SystemMessageLayout } from "./SystemMessageLayout";
-import { useEffect, useState } from "react";
-import { useContext } from "react";
-import { AppContext } from "../../AppContext";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { appStatusSelector } from "../../selectors/app";
+import { appStatusSelector, appStatusIdSelector } from "../../selectors/app";
+import { messagesGetMessage, messagesGetTimeoutRef } from "../../selectors/messages";
 import { useDispatch } from "react-redux";
+import {
+	setMessageConfirm,
+	setMessageDelete,
+	setMessageUpdate,
+	setMessageError,
+	setMessageTimeoutRef,
+} from "../../Actions/messages/actions";
 
 export const SystemMessage = () => {
-	const [timeoutRef, setTimeoutRef] = useState(null);
-	const { messagesList, setMessage, message } = useContext(AppContext);
+	const dispatch = useDispatch();
 	const status = useSelector(appStatusSelector);
+	const statusId = useSelector(appStatusIdSelector);
+	const message = useSelector(messagesGetMessage);
+	const timeoutRef = useSelector(messagesGetTimeoutRef);
+	//console.log("SystemMessage", status, message, timeoutRef, statusId);
+
+	useEffect(() => {
+		if (timeoutRef !== null) {
+			clearTimeout(timeoutRef);
+			dispatch(setMessageTimeoutRef());
+		}
+	}, [timeoutRef, dispatch]);
 
 	const messageHandler = () => {
 		if (status) {
-			clearTimeout(timeoutRef);
+			if (timeoutRef !== null) {
+				clearTimeout(timeoutRef);
+				dispatch(setMessageTimeoutRef());
+			}
 			switch (status) {
 				case "confirm":
-					setMessage({
-						type: "confirm",
-						message: messagesList.confirm,
-					});
+					dispatch(setMessageConfirm());
 					break;
 				case "delete":
-					setMessage({
-						type: "delete",
-						message: messagesList.delete,
-					});
+					dispatch(setMessageDelete());
 					break;
 				case "update":
-					setMessage({
-						type: "update",
-						message: messagesList.update,
-					});
+					dispatch(setMessageUpdate());
 					break;
 				default:
-					setMessage({
-						type: "error",
-						message: status,
-					});
+					dispatch(setMessageError(status));
 					break;
 			}
-			setTimeoutRef(
-				setTimeout(() => {
-					setMessage(null);
-				}, 2000),
-			);
+			dispatch(setMessageTimeoutRef(dispatch));
 		}
 	};
+
 	useEffect(() => {
-		messageHandler();
-	}, [status]);
+		statusId && messageHandler();
+	}, [statusId]);
 
 	const props = {
 		message: message,

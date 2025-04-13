@@ -7,6 +7,7 @@ import { useTodo } from "../../hooks";
 import { useDispatch } from "react-redux";
 import { appStatusConfirm, appStatusCustom } from "../../actions/app/actions";
 import { searchInputValue } from "../../Actions/search/actions";
+import { addTodo } from "../../Actions/todos/actions";
 
 export const ControlPanel = () => {
 	const dispatch = useDispatch();
@@ -21,15 +22,13 @@ export const ControlPanel = () => {
 		resolver: yupResolver(formSchema),
 		mode: "onSubmit",
 	});
-	const { addTodoItem, error } = useTodo();
+	const { error } = useTodo();
 
 	const onChange = (event) => dispatch(searchInputValue(event));
 
 	const onSubmit = (data) => {
-		addTodoItem({
-			title: data.search,
-			completed: false,
-		});
+		dispatch(addTodo(data.search));
+
 		reset();
 		dispatch(searchInputValue());
 		error

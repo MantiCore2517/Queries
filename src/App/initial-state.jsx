@@ -17,6 +17,6 @@ export const initialState = {
 	},
 	app: {
 		title: "",
-		status: null,
+		status: { type: null, id: null },
 	},
 };
